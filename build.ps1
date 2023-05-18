@@ -15,6 +15,6 @@ rm -Recurse bld
 mkdir bld
 cd bld
 
-cl /O2 /Oy /LD ../src/*.c /link /OUT:phe.dll /EXPORT:calc_OT /EXPORT:test
+cl /O2 /Oy /LD ../src/*.c /link /OUT:phe.dll /EXPORT:calc_OT
 
 cd ..

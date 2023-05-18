@@ -1,17 +1,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-int test(const int hands[][5], const int hc) {
-  for(int hidx = 0; hidx < hc; hidx++) {
-    printf("HAND #%02d:", hidx);
-    for(int cidx = 0; cidx < 5; cidx++) {
-      printf(" %02d", hands[hidx][cidx]);
-    }
-    printf("\n");
-  }
-  return 0;
-}
-
 // calculate omaha ten odds
 // hands: array of hands 5 cards each
 //    hc: hand count, must be 2-6
@@ -154,9 +143,6 @@ int eror(char* json, const char* msg)
 int eval_OT(const int b1, const int b2, const int b3, const int b4, const int b5,
             const int h1, const int h2, const int h3, const int h4, const int h5)
 {
-  printf("[eval_OT]: board = %02d %02d %02d %02d %02d\n", b1, b2, b3, b4, b5);
-  printf("[eval_OT]:  hand = %02d %02d %02d %02d %02d\n", h1, h2, h3, h4, h5);
-
   // run eval for all possible hand cards combos
   int no1 = evaluate_omaha_cards(b1, b2, b3, b4, b5, h1, h2, h3, h4);
   int no2 = evaluate_omaha_cards(b1, b2, b3, b4, b5, h1, h2, h3, h5);
@@ -164,15 +150,11 @@ int eval_OT(const int b1, const int b2, const int b3, const int b4, const int b5
   int no4 = evaluate_omaha_cards(b1, b2, b3, b4, b5, h1, h3, h4, h5);
   int no5 = evaluate_omaha_cards(b1, b2, b3, b4, b5, h2, h3, h4, h5);
 
-  printf("[eval_OT]: no1 - no5 = %d %d %d %d %d\n", no1, no2, no3, no4, no5);
-
   // and pick a minimum
   if(no1 > no2) no1 = no2;
   if(no1 > no3) no1 = no3;
   if(no1 > no4) no1 = no4;
   if(no1 > no5) no1 = no5;
-
-  printf("[eval_OT]: min of nos = %d\n", no1);
 
   // this is a final rank
   return no1;

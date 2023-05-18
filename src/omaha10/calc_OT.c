@@ -81,7 +81,7 @@ int calc_OT(const int hands[][5], const int hsz, const int* board, const int bsz
     return eror(json, "invalid board card: duplicates existing cards");
   }
 
-  // kick every board card from the deck
+  // kick every deads card from the deck
   if(ccnt(deads, dsz) != dsz) {
     return eror(json, "invalid deads: all cards must be 0-51");
   }

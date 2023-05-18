@@ -18,6 +18,8 @@ import copy
 import json
 import ctypes
 
+PHE = ctypes.windll.LoadLibrary('phe.dll')
+
 CARDS_DICT = { '2c': 0,  '2d': 1,  '2h': 2,  '2s': 3,
                '3c': 4,  '3d': 5,  '3h': 6,  '3s': 7,
                '4c': 8,  '4d': 9,  '4h': 10, '4s': 11,
@@ -32,11 +34,8 @@ CARDS_DICT = { '2c': 0,  '2d': 1,  '2h': 2,  '2s': 3,
                'Kc': 44, 'Kd': 45, 'Kh': 46, 'Ks': 47,
                'Ac': 48, 'Ad': 49, 'Ah': 50, 'As': 51 }
 
-CARDS_LIST = [ '' for _ in range(53) ]
-for key in CARDS_DICT.keys():
-  CARDS_LIST[CARDS_DICT[key] + 1] = key
-
-PHE = ctypes.windll.LoadLibrary(r'c:\Work\MINE\phe\bld\phe.dll')
+# O(n^2) one-liner because I have no idea if dict returns items in any order...
+CARDS_LIST = [ list(filter(lambda kv: kv[1] == id, CARDS_DICT.items()))[0][0] for id in range(52) ]
 
 def str2ids(line: str = None) -> list[int]:
   ids: list[int] = [ ]
@@ -54,7 +53,7 @@ def str2ids(line: str = None) -> list[int]:
 def ids2str(ids: list[int]) -> str:
   ret = ''
   for id in ids:
-    ret += CARDS_LIST[id + 1] + ' '
+    ret += CARDS_LIST[id] + ' '
   return ret.strip()
 
 def odds(hands: list[list[int]], board: list[int], deads: list[int]) -> any:

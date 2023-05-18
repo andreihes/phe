@@ -50,7 +50,7 @@ int calc_OT(const int hands[][5], const int hsz, const int* board, const int bsz
   }
 
   // ensure hands count is 2-6
-  if(hsz < 1 || hsz > 6) {
+  if(hsz < 2 || hsz > 6) {
     return eror(json, "invalid hands count: must be 2-6");
   }
 

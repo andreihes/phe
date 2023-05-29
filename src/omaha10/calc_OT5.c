@@ -1,56 +1,62 @@
 #include "omaha10.h"
 
-int calc_OT5(const int h1[5], const int h2[5], const int h3[5], const int h4[5], const int h5[5], const int deck[52], const int ftrsz[5], char* json) {
+int calc_OT5(const int* hands, const int* scenes, const int deck[52], const int ftrsz[5], char* json) {
+  const int* h0 = hands;
+  const int* h1 = hands + 5;
+  const int* h2 = hands + 10;
+  const int* h3 = hands + 15;
+  const int* h4 = hands + 20;
+
   int totl = 0;
-  int wins[5] = { 0, 0, 0, 0, 0 };
-  int ties[26] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-  for(int d1 = 0; d1 < ftrsz[0]; ++d1) {
-    for(int d2 = d1 + 1; d2 < ftrsz[1]; ++d2) {
-      for(int d3 = d2 + 1; d3 < ftrsz[2]; ++d3) {
-        for(int d4 = d3 + 1; d4 < ftrsz[3]; ++d4) {
-          for(int d5 = d4 + 1; d5 < ftrsz[4]; ++d5) {
+  int wins[5] = { 0 };
+  int ties[26] = { 0 };
+  for(int d0 = 0; d0 < ftrsz[0]; ++d0) {
+    for(int d1 = d0 + 1; d1 < ftrsz[1]; ++d1) {
+      for(int d2 = d1 + 1; d2 < ftrsz[2]; ++d2) {
+        for(int d3 = d2 + 1; d3 < ftrsz[3]; ++d3) {
+          for(int d4 = d3 + 1; d4 < ftrsz[4]; ++d4) {
             ++totl;
-            int h1r = eval_OT(deck[d1], deck[d2], deck[d3], deck[d4], deck[d5], h1[0], h1[1], h1[2], h1[3], h1[4]);
-            int h2r = eval_OT(deck[d1], deck[d2], deck[d3], deck[d4], deck[d5], h2[0], h2[1], h2[2], h2[3], h2[4]);
-            int h3r = eval_OT(deck[d1], deck[d2], deck[d3], deck[d4], deck[d5], h3[0], h3[1], h3[2], h3[3], h3[4]);
-            int h4r = eval_OT(deck[d1], deck[d2], deck[d3], deck[d4], deck[d5], h4[0], h4[1], h4[2], h4[3], h4[4]);
-            int h5r = eval_OT(deck[d1], deck[d2], deck[d3], deck[d4], deck[d5], h5[0], h5[1], h5[2], h5[3], h5[4]);
+            int h0r = eval_OT(deck[d0], deck[d1], deck[d2], deck[d3], deck[d4], h0[0], h0[1], h0[2], h0[3], h0[4]);
+            int h1r = eval_OT(deck[d0], deck[d1], deck[d2], deck[d3], deck[d4], h1[0], h1[1], h1[2], h1[3], h1[4]);
+            int h2r = eval_OT(deck[d0], deck[d1], deck[d2], deck[d3], deck[d4], h2[0], h2[1], h2[2], h2[3], h2[4]);
+            int h3r = eval_OT(deck[d0], deck[d1], deck[d2], deck[d3], deck[d4], h3[0], h3[1], h3[2], h3[3], h3[4]);
+            int h4r = eval_OT(deck[d0], deck[d1], deck[d2], deck[d3], deck[d4], h4[0], h4[1], h4[2], h4[3], h4[4]);
                                                                                       // 5 choose 1 = 5
-                 if(h1r <  h2r && h1r <  h3r && h1r <  h4r && h1r <  h5r) ++wins[0];  // h1
-            else if(h2r <  h1r && h2r <  h3r && h2r <  h4r && h2r <  h5r) ++wins[1];  // h2
-            else if(h3r <  h1r && h3r <  h2r && h3r <  h4r && h3r <  h5r) ++wins[2];  // h3
-            else if(h4r <  h1r && h4r <  h2r && h4r <  h3r && h4r <  h5r) ++wins[3];  // h4
-            else if(h5r <  h1r && h5r <  h2r && h5r <  h3r && h5r <  h4r) ++wins[4];  // h5
+                 if(h0r <  h1r && h0r <  h2r && h0r <  h3r && h0r <  h4r) ++wins[0];  // 0
+            else if(h1r <  h0r && h1r <  h2r && h1r <  h3r && h1r <  h4r) ++wins[1];  // 1
+            else if(h2r <  h0r && h2r <  h1r && h2r <  h3r && h2r <  h4r) ++wins[2];  // 2
+            else if(h3r <  h0r && h3r <  h1r && h3r <  h2r && h3r <  h4r) ++wins[3];  // 3
+            else if(h4r <  h0r && h4r <  h1r && h4r <  h2r && h4r <  h3r) ++wins[4];  // 4
                                                                                       // 5 choose 2 = 10
-            else if(h1r == h2r && h1r <  h3r && h1r  < h4r && h1r <  h5r) ++ties[0];  // h1 h2
-            else if(h1r == h3r && h1r <  h2r && h1r  < h4r && h1r <  h5r) ++ties[1];  // h1 h3
-            else if(h1r == h4r && h1r <  h2r && h1r  < h3r && h1r <  h5r) ++ties[2];  // h1 h4
-            else if(h1r == h5r && h1r <  h2r && h1r  < h3r && h1r <  h4r) ++ties[3];  // h1 h5
-            else if(h2r == h3r && h2r <  h1r && h2r  < h4r && h2r <  h5r) ++ties[4];  // h2 h3
-            else if(h2r == h4r && h2r <  h1r && h2r  < h3r && h2r <  h5r) ++ties[5];  // h2 h4
-            else if(h2r == h5r && h2r <  h1r && h2r  < h3r && h2r <  h4r) ++ties[6];  // h2 h5
-            else if(h3r == h4r && h3r <  h1r && h3r  < h2r && h3r <  h5r) ++ties[7];  // h3 h4
-            else if(h3r == h5r && h3r <  h1r && h3r  < h2r && h3r <  h4r) ++ties[8];  // h3 h5
-            else if(h4r == h5r && h4r <  h1r && h4r  < h2r && h4r <  h3r) ++ties[9];  // h4 h5
+            else if(h0r == h1r && h0r <  h2r && h0r  < h3r && h0r <  h4r) ++ties[0];  // 0 1
+            else if(h0r == h2r && h0r <  h1r && h0r  < h3r && h0r <  h4r) ++ties[1];  // 0 2
+            else if(h0r == h3r && h0r <  h1r && h0r  < h2r && h0r <  h4r) ++ties[2];  // 0 3
+            else if(h0r == h4r && h0r <  h1r && h0r  < h2r && h0r <  h3r) ++ties[3];  // 0 4
+            else if(h1r == h2r && h1r <  h0r && h1r  < h3r && h1r <  h4r) ++ties[4];  // 1 2
+            else if(h1r == h3r && h1r <  h0r && h1r  < h2r && h1r <  h4r) ++ties[5];  // 1 3
+            else if(h1r == h4r && h1r <  h0r && h1r  < h2r && h1r <  h3r) ++ties[6];  // 1 4
+            else if(h2r == h3r && h2r <  h0r && h2r  < h1r && h2r <  h4r) ++ties[7];  // 2 3
+            else if(h2r == h4r && h2r <  h0r && h2r  < h1r && h2r <  h3r) ++ties[8];  // 2 4
+            else if(h3r == h4r && h3r <  h0r && h3r  < h1r && h3r <  h2r) ++ties[9];  // 3 4
                                                                                       // 5 choose 3 = 10
-            else if(h1r == h2r && h1r == h3r && h1r  < h4r && h1r <  h5r) ++ties[10]; // h1 h2 h3
-            else if(h1r == h2r && h1r == h4r && h1r  < h3r && h1r <  h5r) ++ties[11]; // h1 h2 h4
-            else if(h1r == h2r && h1r == h5r && h1r  < h3r && h1r <  h4r) ++ties[12]; // h1 h2 h5
-            else if(h1r == h3r && h1r == h4r && h1r  < h2r && h1r <  h5r) ++ties[13]; // h1 h3 h4
-            else if(h1r == h3r && h1r == h5r && h1r  < h2r && h1r <  h4r) ++ties[14]; // h1 h3 h5
-            else if(h1r == h4r && h1r == h5r && h1r  < h2r && h1r <  h3r) ++ties[15]; // h1 h4 h5
-            else if(h2r == h3r && h2r == h4r && h2r  < h1r && h2r <  h5r) ++ties[16]; // h2 h3 h4
-            else if(h2r == h3r && h2r == h5r && h2r  < h1r && h2r <  h4r) ++ties[17]; // h2 h3 h5
-            else if(h2r == h4r && h2r == h5r && h2r  < h1r && h2r <  h3r) ++ties[18]; // h2 h4 h5
-            else if(h3r == h4r && h3r == h5r && h3r  < h1r && h3r <  h2r) ++ties[19]; // h3 h4 h5
+            else if(h0r == h1r && h0r == h2r && h0r  < h3r && h0r <  h4r) ++ties[10]; // 0 1 2
+            else if(h0r == h1r && h0r == h3r && h0r  < h2r && h0r <  h4r) ++ties[11]; // 0 1 3
+            else if(h0r == h1r && h0r == h4r && h0r  < h2r && h0r <  h3r) ++ties[12]; // 0 1 4
+            else if(h0r == h2r && h0r == h3r && h0r  < h1r && h0r <  h4r) ++ties[13]; // 0 2 3
+            else if(h0r == h2r && h0r == h4r && h0r  < h1r && h0r <  h3r) ++ties[14]; // 0 2 4
+            else if(h0r == h3r && h0r == h4r && h0r  < h1r && h0r <  h2r) ++ties[15]; // 0 3 4
+            else if(h1r == h2r && h1r == h3r && h1r  < h0r && h1r <  h4r) ++ties[16]; // 1 2 3
+            else if(h1r == h2r && h1r == h4r && h1r  < h0r && h1r <  h3r) ++ties[17]; // 1 2 4
+            else if(h1r == h3r && h1r == h4r && h1r  < h0r && h1r <  h2r) ++ties[18]; // 1 3 4
+            else if(h2r == h3r && h2r == h4r && h2r  < h0r && h2r <  h1r) ++ties[19]; // 2 3 4
                                                                                       // 5 choose 4 = 5
-            else if(h1r == h2r && h1r == h3r && h1r == h4r && h1r <  h5r) ++ties[20]; // h1 h2 h3 h4
-            else if(h1r == h2r && h1r == h3r && h1r == h5r && h1r <  h4r) ++ties[21]; // h1 h2 h3 h5
-            else if(h1r == h2r && h1r == h4r && h1r == h5r && h1r <  h3r) ++ties[22]; // h1 h2 h4 h5
-            else if(h1r == h3r && h1r == h4r && h1r == h5r && h1r <  h2r) ++ties[23]; // h1 h3 h4 h5
-            else if(h2r == h3r && h2r == h4r && h2r == h5r && h2r <  h1r) ++ties[24]; // h2 h3 h4 h5
+            else if(h0r == h1r && h0r == h2r && h0r == h3r && h0r <  h4r) ++ties[20]; // 0 1 2 3
+            else if(h0r == h1r && h0r == h2r && h0r == h4r && h0r <  h3r) ++ties[21]; // 0 1 2 4
+            else if(h0r == h1r && h0r == h3r && h0r == h4r && h0r <  h2r) ++ties[22]; // 0 1 3 4
+            else if(h0r == h2r && h0r == h3r && h0r == h4r && h0r <  h1r) ++ties[23]; // 0 2 3 4
+            else if(h1r == h2r && h1r == h3r && h1r == h4r && h1r <  h0r) ++ties[24]; // 1 2 3 4
                                                                                       // 5 choose 5 = 1
-            else if(h1r == h2r && h1r == h3r && h1r == h4r && h1r == h5r) ++ties[25]; // h1 h2 h3 h4 h5
+            else if(h0r == h1r && h0r == h2r && h0r == h3r && h0r == h4r) ++ties[25]; // 0 1 2 3 4
             else return eror(json, "calc_OT5 missed to process a ranking case");
           }
         }
@@ -77,53 +83,73 @@ int calc_OT5(const int h1[5], const int h2[5], const int h3[5], const int h4[5],
       "'totl': %d,"
       "'wins':"
       "["
-        "{ 'arg': 'h1', 'idx': 0, 'ids': [ %d, %d, %d, %d, %d ], 'cnt': %d },"
-        "{ 'arg': 'h2', 'idx': 1, 'ids': [ %d, %d, %d, %d, %d ], 'cnt': %d },"
-        "{ 'arg': 'h3', 'idx': 2, 'ids': [ %d, %d, %d, %d, %d ], 'cnt': %d },"
-        "{ 'arg': 'h4', 'idx': 3, 'ids': [ %d, %d, %d, %d, %d ], 'cnt': %d },"
-        "{ 'arg': 'h5', 'idx': 4, 'ids': [ %d, %d, %d, %d, %d ], 'cnt': %d }"
+        "{ 'scn': %d, 'cnt': %d },"
+        "{ 'scn': %d, 'cnt': %d },"
+        "{ 'scn': %d, 'cnt': %d },"
+        "{ 'scn': %d, 'cnt': %d },"
+        "{ 'scn': %d, 'cnt': %d }"
       "],"
       "'ties':"
       "["
-        "{ 'arg': [ 'h1', 'h2' ], 'idx': [ 0, 1 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h3' ], 'idx': [ 0, 2 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h4' ], 'idx': [ 0, 3 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h5' ], 'idx': [ 0, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h2', 'h3' ], 'idx': [ 1, 2 ], 'cnt': %d },"
-        "{ 'arg': [ 'h2', 'h4' ], 'idx': [ 1, 3 ], 'cnt': %d },"
-        "{ 'arg': [ 'h2', 'h5' ], 'idx': [ 1, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h3', 'h4' ], 'idx': [ 2, 3 ], 'cnt': %d },"
-        "{ 'arg': [ 'h3', 'h5' ], 'idx': [ 2, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h4', 'h5' ], 'idx': [ 3, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h2', 'h3' ], 'idx': [ 0, 1, 2 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h2', 'h4' ], 'idx': [ 0, 1, 3 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h2', 'h5' ], 'idx': [ 0, 1, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h3', 'h4' ], 'idx': [ 0, 2, 3 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h3', 'h5' ], 'idx': [ 0, 2, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h4', 'h5' ], 'idx': [ 0, 3, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h2', 'h3', 'h4' ], 'idx': [ 1, 2, 3 ], 'cnt': %d },"
-        "{ 'arg': [ 'h2', 'h3', 'h5' ], 'idx': [ 1, 2, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h2', 'h4', 'h5' ], 'idx': [ 1, 3, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h3', 'h4', 'h5' ], 'idx': [ 2, 3, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h2', 'h3', 'h4' ], 'idx': [ 0, 1, 2, 3 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h2', 'h3', 'h5' ], 'idx': [ 0, 1, 2, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h2', 'h4', 'h5' ], 'idx': [ 0, 1, 3, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h3', 'h4', 'h5' ], 'idx': [ 0, 2, 3, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h2', 'h3', 'h4', 'h5' ], 'idx': [ 1, 2, 3, 4 ], 'cnt': %d },"
-        "{ 'arg': [ 'h1', 'h2', 'h3', 'h4', 'h5' ], 'idx': [ 0, 1, 2, 3, 4 ], 'cnt': %d }"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d, %d, %d, %d ], 'cnt': %d }"
       "]"
     "}",
     totl,
-    h1[0], h1[1], h1[2], h1[3], h1[4], wins[0],
-    h2[0], h2[1], h2[2], h2[3], h2[4], wins[1],
-    h3[0], h3[1], h3[2], h3[3], h3[4], wins[2],
-    h4[0], h4[1], h4[2], h4[3], h4[4], wins[3],
-    h5[0], h5[1], h5[2], h5[3], h5[4], wins[4],
-    ties[0], ties[1], ties[2], ties[3], ties[4], ties[5],
-    ties[6], ties[7], ties[8], ties[9], ties[10], 
-    ties[11], ties[12], ties[13], ties[14], ties[15],
-    ties[16], ties[17], ties[18], ties[19], ties[20],
-    ties[21], ties[22], ties[23], ties[24], ties[25]
+    scenes[0], wins[0],
+    scenes[1], wins[1],
+    scenes[2], wins[2],
+    scenes[3], wins[3],
+    scenes[4], wins[4],
+    scenes[0], scenes[1], ties[0],
+    scenes[0], scenes[2], ties[1],
+    scenes[0], scenes[3], ties[2],
+    scenes[0], scenes[4], ties[3],
+    scenes[1], scenes[2], ties[4],
+    scenes[1], scenes[3], ties[5],
+    scenes[1], scenes[4], ties[6],
+    scenes[2], scenes[3], ties[7],
+    scenes[2], scenes[4], ties[8],
+    scenes[3], scenes[4], ties[9],
+    scenes[0], scenes[1], scenes[2], ties[10],
+    scenes[0], scenes[1], scenes[3], ties[11],
+    scenes[0], scenes[1], scenes[4], ties[12],
+    scenes[0], scenes[2], scenes[3], ties[13],
+    scenes[0], scenes[2], scenes[4], ties[14],
+    scenes[0], scenes[3], scenes[4], ties[15],
+    scenes[1], scenes[2], scenes[3], ties[16],
+    scenes[1], scenes[2], scenes[4], ties[17],
+    scenes[1], scenes[3], scenes[4], ties[18],
+    scenes[2], scenes[3], scenes[4], ties[19],
+    scenes[0], scenes[1], scenes[2], scenes[3], ties[20],
+    scenes[0], scenes[1], scenes[2], scenes[4], ties[21],
+    scenes[0], scenes[1], scenes[3], scenes[4], ties[22],
+    scenes[0], scenes[2], scenes[3], scenes[4], ties[23],
+    scenes[1], scenes[2], scenes[3], scenes[4], ties[24],
+    scenes[0], scenes[1], scenes[2], scenes[3], scenes[4], ties[25]
   );
   repl(json);
   return 0;

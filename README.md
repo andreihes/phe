@@ -30,8 +30,8 @@ namespace Barmaglot.Calcs
       int[] deads = { };
 
       StringBuilder json = new StringBuilder(4 * 1024); // 4K ought to be enough for anybody
-      int core = Demo.CalcOdds(hands, scene, scene.Length, board, board.Length, deads, deads.Length, json);
-      Console.WriteLine(core);
+      int code = Demo.CalcOdds(hands, scene, scene.Length, board, board.Length, deads, deads.Length, json);
+      Console.WriteLine(code);
       Console.WriteLine(json.ToString());
     }
   }

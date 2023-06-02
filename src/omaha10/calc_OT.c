@@ -43,7 +43,7 @@ int calc_OT(const int* hands, const int* scenes, const int hsz, const int* board
     return eror(json, "invalid deads: all cards must be 0-51");
   }
   expect -= dsz;
-  if(expect < 0 || dsz + decksz > 52) {
+  if(expect < 0) {
     return eror(json, "invalid deads: too many deads");
   }
   decksz = kick(deck, decksz, deads, dsz);
@@ -58,11 +58,11 @@ int calc_OT(const int* hands, const int* scenes, const int hsz, const int* board
 
   // flop-turn-river sizes
   int ftrsz[5];
-  ftrsz[0] = bsz >= 3 ? 1 : decksz; // once there is flop then fix flop card end indexed at 1, 2, 3
-  ftrsz[1] = bsz >= 3 ? 2 : decksz; // we already have flop-turn-river cards at the start of the deck
-  ftrsz[2] = bsz >= 3 ? 3 : decksz; // otherwise let it iterate up to deck size
-  ftrsz[3] = bsz >= 4 ? 4 : decksz; // same logic for turn
-  ftrsz[4] = bsz == 5 ? 5 : decksz; // and same for river
+  ftrsz[0] = bsz >= 1 ? 1 : decksz;
+  ftrsz[1] = bsz >= 2 ? 2 : decksz;
+  ftrsz[2] = bsz >= 3 ? 3 : decksz;
+  ftrsz[3] = bsz >= 4 ? 4 : decksz;
+  ftrsz[4] = bsz == 5 ? 5 : decksz;
 
   // brute force everything
   switch(hsz) {

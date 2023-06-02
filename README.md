@@ -63,7 +63,7 @@ namespace Barmaglot.Calcs
         0,
         1
       ],
-      "cnt": 0    # no ties between scene 0 and 1 (scene 3 loses)
+      "cnt": 0    # no ties between scene 0 and 1 (scene 2 loses)
     },
     {
       "scn": [

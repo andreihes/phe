@@ -100,6 +100,7 @@ int calc_OT5(const int* hands, const int* scenes, const int deck[52], const int 
         "{ 'scn': [ %d, %d ], 'cnt': %d },"
         "{ 'scn': [ %d, %d ], 'cnt': %d },"
         "{ 'scn': [ %d, %d ], 'cnt': %d },"
+        "{ 'scn': [ %d, %d ], 'cnt': %d },"
         "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
         "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"
         "{ 'scn': [ %d, %d, %d ], 'cnt': %d },"

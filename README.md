@@ -5,6 +5,8 @@ Few more utilities added:
 1. Exact odds calculation for 2-6 5-cards hands
 2. Pre-flop, flop, turn and river exact odds
 
+PS: copied an improved latest 5-card omaha hand evaluator: see `eval_OT_slow` vs `eval_OT`. 
+
 # example
 ```C#
 using System.Text;

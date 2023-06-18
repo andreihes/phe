@@ -2,7 +2,7 @@
 
 // eval omaha 5 cards using omaha 4 cards
 // brute force, no optimizations and etc.
-int eval_OT(const int b0, const int b1, const int b2, const int b3, const int b4, const int h0, const int h1, const int h2, const int h3, const int h4)
+int eval_OT_slow(const int b0, const int b1, const int b2, const int b3, const int b4, const int h0, const int h1, const int h2, const int h3, const int h4)
 {
   // run eval for all possible hand cards combos
   int no0 = evaluate_omaha_cards(b0, b1, b2, b3, b4, h1, h2, h3, h4);
@@ -19,4 +19,11 @@ int eval_OT(const int b0, const int b1, const int b2, const int b3, const int b4
 
   // this is a final rank
   return no0;
+}
+
+// this one is faster because the author spent some
+// time to THINK on the implementation details (thanks)
+int eval_OT(const int b0, const int b1, const int b2, const int b3, const int b4, const int h0, const int h1, const int h2, const int h3, const int h4)
+{
+  return evaluate_plo5_cards(b0, b1, b2, b3, b4, h0, h1, h2, h3, h4);
 }

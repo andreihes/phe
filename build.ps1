@@ -15,6 +15,8 @@ rm -Recurse bld
 mkdir bld
 cd bld
 
+tar -xf ../src/tables_plo5.c.gz -C ../src
 cl /O2 /Oy /LD ../src/*.c ../src/omaha10/*.c /link /OUT:phe.dll /EXPORT:calc_OT
+rm ../src/tables_plo5.c
 
 cd ..
